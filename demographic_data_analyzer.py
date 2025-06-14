@@ -20,14 +20,23 @@ print(f'Percentage of people with a Bachelors degree: {percentage_bachelors:.2f}
 advanced_education = df['education'].isin(['Bachelors', 'Masters', 'Doctorate'])
 higher_education_rich = df[advanced_education & (df['salary'] == '>50K')]
 percentage_higher_education_rich = (higher_education_rich.shape[0] / df[advanced_education].shape[0]) * 100
+print(f'Percentage of people with advanced education earning >50K: {percentage_higher_education_rich:.2f}%')
 #What is the minimum number of hours a person works per week?
 min_work_hours = df['hours-per-week'].min()
 print(f'Minimum number of hours worked per week: {min_work_hours}')
 #What percentage of the people who work the minimum number of hours per week have a salary of more than 50K?
 min_hours_rich = df[(df['hours-per-week'] == min_work_hours) & (df['salary'] == '>50K')]
-#What country has the highest percentage of people that earn >50K and what is that percentage?
 rich_percentage = (min_hours_rich.shape[0] / df[df['hours-per-week'] == min_work_hours].shape[0]) * 100
 print(f'Percentage of people who work {min_work_hours} hours per week and earn >50K: {rich_percentage:.2f}%')
+#What country has the highest percentage of people that earn >50K and what is that percentage?
+country_counts = df['native-country'].value_counts()
+rich_country_counts = df[df['salary'] == '>50K']['native-country'].value_counts()
+country_percentages = (rich_country_counts / country_counts * 100).fillna(0)
+highest_earning_country = country_percentages.idxmax()
+highest_earning_country_percentage = country_percentages.max()
+print(f'Country with highest percentage of >50K earners: {highest_earning_country} ({highest_earning_country_percentage:.2f}%)')
+#rich_percentage = (min_hours_rich.shape[0] / df[df['hours-per-week'] == min_work_hours].shape[0]) * 100
+#print(f'Percentage of people who work {min_work_hours} hours per week and earn >50K: {rich_percentage:.2f}%')
 #Identify the most popular occupation for those who earn >50K in India.
 top_IN_occupation = df[(df['native-country'] == 'India') & (df['salary'] == '>50K')]['occupation'].mode()[0]
 print(f'Most popular occupation in India for those earning >50K: {top_IN_occupation}')
